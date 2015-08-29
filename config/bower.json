@@ -1,0 +1,20 @@
+{
+  "name": "BobRazoswki Theme",
+  "version": "1.0.0",
+  "authors": [
+    "BobRazoswki <bobongithub@gmail.com>"
+  ],
+  "description": "BobRazoswki Theme",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "lib/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+
+  }
+}
