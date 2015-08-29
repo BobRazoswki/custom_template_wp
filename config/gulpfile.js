@@ -39,6 +39,7 @@ gulp.task('images', function() {
   return gulp.src(paths.assets.images)
     .pipe(cache(imagemin({ optimizationLevel: 5, progressive: true, interlaced: true })))
     .pipe(gulp.dest(paths.build.images))
+    .pipe(livereload());
 });
 
 gulp.task('styles', function() {
@@ -55,6 +56,7 @@ gulp.task('styles', function() {
     .pipe(minifycss())
     .pipe(rename({suffix: '.min'}))
     .pipe(gulp.dest(paths.build.css))
+    .pipe(livereload());
 });
 
 gulp.task('depcss', function() {
@@ -64,6 +66,7 @@ gulp.task('depcss', function() {
     .pipe(minifycss())
     .pipe(rename({suffix: '.min'}))
     .pipe(gulp.dest(paths.build.vendor))
+    .pipe(livereload());
 });
 
 gulp.task('depjs', function() {
@@ -71,6 +74,7 @@ gulp.task('depjs', function() {
     .pipe(minifycss())
     .pipe(uglify())
     .pipe(gulp.dest(paths.build.vendor))
+    .pipe(livereload());
 });
 
 
@@ -86,9 +90,11 @@ gulp.task('scripts', function() {
     .pipe(uglify())
     .pipe(rename({suffix: '.min'}))
     .pipe(gulp.dest(paths.build.js))
+    .pipe(livereload());
 });
 
 gulp.task('watch', function() {
+  livereload.listen();
 
   // Watch .scss files
   gulp.watch('../assets/scss/**/*.scss', ['styles']);
