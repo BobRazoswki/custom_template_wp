@@ -1,17 +1,6 @@
-<?php
-/**
- * Footer template
- *
- * Displays all of the head element and everything up until the "site-content" div.
- *
- * @package WordPress
- * @subpackage Impritexte
- * @since Impritexte 1.0
- */
-?>
-
-
-
-
-</body>
+    <footer>
+      
+    </footer>
+    <?php wp_footer(); ?>
+  </body>
 </html>

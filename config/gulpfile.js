@@ -1,108 +1,232 @@
-// npm install gulp gulp-ruby-sass gulp-autoprefixer gulp-uglify gulp-minify-css gulp-imagemin gulp-rename gulp-concat gulp-cache gulp-livereload gulp-sass del gulp-jsmin gulp-clean --save-dev
-'use strict';
-var gulp         = require('gulp'),
-    autoprefixer = require('gulp-autoprefixer'),
-    minifycss    = require('gulp-minify-css'),
-    uglify       = require('gulp-uglify'),
-    imagemin     = require('gulp-imagemin'),
-    rename       = require('gulp-rename'),
-    concat       = require('gulp-concat'),
-    cache        = require('gulp-cache'),
-    livereload   = require('gulp-livereload'),
-    del          = require('del'),
-    sass         = require('gulp-sass'),
-    jsmin        = require("gulp-jsmin"),
-    paths = {
+// install gulp-install gulp-rename gulp-sass gulp-bower gulp-autoprefixer gulp-concat gulp-watch gulp-connect gulp-livereload gulp-jsmin gulp-cssmin browser-sync del --save-dev
 
-      assets: {
-        scss:   "../assets/scss/**/*.scss",
-        css:    "../assets/css/**/*.css",
-        js:     "../assets/js/**/*.js",
-        images: "../assets/images/**/*",
-        vendor: "../assets/vendor/**/*",
-      },
+var livereload = require('gulp-livereload');
 
-      build: {
-        css:    "../build/assets/css/",
-        js:     "../build/assets/js/",
-        images: "../build/assets/images/",
-        vendor: "../build/assets/vendor/",
+var gulp       = require("gulp")
+  , del        = require('del')
+  , sass       = require("gulp-sass")
+  , autoprefix = require("gulp-autoprefixer")
+  , concat     = require("gulp-concat")
+
+  , watch      = require("gulp-watch")
+  , connect    = require("gulp-connect")
+  , browserSync = require('browser-sync').create()
+
+  , jsmin      = require("gulp-jsmin")
+  , cssmin     = require("gulp-cssmin")
+  , rename     = require("gulp-rename")
+
+  , bower      = require('gulp-bower')
+  , install    = require("gulp-install")
+
+  , devpath   = "../"
+  , buildpath = "../build/"
+  , paths = {
+      dev: {
+          js:        devpath + "assets/js/"
+        , css:       devpath + "assets/css/"
+        , img:       devpath + "assets/img/*"
+        , jsfiles:   devpath + "assets/js/partials/*.js"
+        , js2build:  devpath + "assets/js/main.js"
+        , js2files:  devpath + "assets/js/lib/**/*.js"
+        , cssfiles:  devpath + "assets/css/*.css"
+        , scssfiles: devpath + "assets/scss/**/*.scss"
+        , phpfiles:  devpath + "./**/*.php"
+        , htmlfiles: devpath + "./*.html"
+        , libfiles:  devpath + "assets/lib/**/*"
       }
+      , build: {
+          js:     buildpath + "assets/js/"
+        , jsmain: buildpath + "assets/js/main.min.js"
+        , css:    buildpath + "assets/css/"
+        , img:    buildpath + "assets/img/"
+        , lib:    buildpath + "assets/lib"
+      }
+  }
+  ;
 
-    }
-
-gulp.task('default', function() {
-    gulp.start('styles', 'scripts','depcss','depjs', 'images', 'watch');
+gulp.task('browser-sync', function() {
+    // browserSync.init(null, {
+    //   proxy: {
+    //     host: "localhost",
+    //     port: 8890
+    //   }
+    // });
 });
 
-gulp.task('images', function() {
-  return gulp.src(paths.assets.images)
-    .pipe(cache(imagemin({ optimizationLevel: 5, progressive: true, interlaced: true })))
-    .pipe(gulp.dest(paths.build.images))
-    .pipe(livereload());
+// dev tasks
+gulp.task("dev-php", function () {
+  gulp.src(paths.dev.phpfiles)
+      // .pipe(browserSync.reload({stream:true}));
 });
 
-gulp.task('styles', function() {
-
-  del('paths.build.css', function (err, paths) {
-    console.log("Bob says: main.min.css has been recreated");
-  });
-
-  return gulp.src(paths.assets.scss, { style: 'expanded' })
-    .pipe(sass.sync().on('error', sass.logError))
-    .pipe(autoprefixer('last 2 version'))
-    .pipe(concat('main.css'))
-    .pipe(gulp.dest(paths.assets.css))
-    .pipe(minifycss())
-    .pipe(rename({suffix: '.min'}))
-    .pipe(gulp.dest(paths.build.css))
-    .pipe(livereload());
+gulp.task("dev-html", function () {
+  gulp.src(paths.dev.htmlfiles)
+    //  .pipe(browserSync.reload({stream:true}));
 });
 
-gulp.task('depcss', function() {
-  return gulp.src(paths.assets.css, { style: 'expanded' })
-    .pipe(autoprefixer('last 2 version'))
-    .pipe(concat('dependencies.css'))
-    .pipe(minifycss())
-    .pipe(rename({suffix: '.min'}))
-    .pipe(gulp.dest(paths.build.vendor))
-    .pipe(livereload());
+gulp.task("dev-styles", function() {
+  var opts = { style: "expanded" };
+  gulp.src(paths.dev.scssfiles)
+      .pipe(sass(opts))
+      .pipe(autoprefix("last 2 versions", "> 1%", "Explorer 7", "Android 2"))
+      .pipe(gulp.dest(paths.dev.css))
+      // .pipe(browserSync.reload({stream:true}));
 });
 
-gulp.task('depjs', function() {
-  return gulp.src(paths.assets.vendor, { style: 'expanded' })
-    .pipe(minifycss())
-    .pipe(uglify())
-    .pipe(gulp.dest(paths.build.vendor))
-    .pipe(livereload());
-});
-
-
-gulp.task('scripts', function() {
-
-  del('paths.build.js', function (err, paths) {
-    console.log("Bob says: main.min.js has been recreated");
-  });
-
-  return gulp.src(paths.assets.js)
-    .pipe(concat('main.js'))
-    .pipe(jsmin())
-    .pipe(uglify())
-    .pipe(rename({suffix: '.min'}))
-    .pipe(gulp.dest(paths.build.js))
-    .pipe(livereload());
-});
-
-gulp.task('watch', function() {
-  livereload.listen();
-
-  // Watch .scss files
-  gulp.watch('../assets/scss/**/*.scss', ['styles']);
-
-  // Watch .js files
-  gulp.watch('../assets/js/**/*.js', ['scripts']);
-
-  // Watch image files
-  gulp.watch('../assets/images/**/*', ['images']);
+gulp.task("dev-jsconcat", function(){
+  gulp.src(paths.dev.jsfiles)
+      .pipe(concat("main.js"))
+      .pipe(gulp.dest(paths.dev.js));
 
 });
+
+// build tasks
+// CSS concat and minify
+gulp.task("cssmin", function(){
+  gulp.src(paths.dev.cssfiles)
+      .pipe(concat("main.css"))
+      .pipe(cssmin())
+      .pipe(rename({suffix: ".min"}))
+      .pipe(gulp.dest(paths.build.css))
+      // .pipe(browserSync.stream({match: "*.css"}));
+});
+
+gulp.task("jsmin", function(){
+  del([paths.build.jsmain], {force : true})
+  gulp.src(paths.dev.js2build)
+        .pipe(jsmin())
+        .pipe(rename({suffix: '.min'}))
+        .pipe(gulp.dest(paths.build.js))
+        // .pipe(browserSync.reload({stream:true}))
+        ;
+});
+
+// Moves the libraries to build/assets/lib folder
+gulp.task("build-libs", function(){
+  gulp.src(paths.dev.libfiles)
+      .pipe(gulp.dest(paths.build.lib))
+      ;
+});
+
+// watch html, scss and js files
+gulp.task("watch", function () {
+  gulp.watch(paths.dev.scssfiles, ["dev-styles"]);
+  gulp.watch(paths.dev.cssfiles,  ["cssmin"]);
+  gulp.watch(paths.dev.jsfiles,   ["dev-jsconcat"]);
+  gulp.watch(paths.dev.jsfiles,   ["jsmin"]);
+  gulp.watch(paths.dev.htmlfiles, ["dev-html"]);
+  gulp.watch(paths.dev.phpfiles,  ["dev-php"]);
+});
+
+// tasks
+// gulp.task("build",  ["sendfonts","sendphp","imgmin","jsmin","cssmin"]);
+//gulp.task("default", ["dev-styles", "dev-jsconcat", 'browser-sync', "watch"]);
+gulp.task("default", ["dev-styles", "dev-jsconcat", "watch"]);
+
+//
+//
+
+
+//
+
+//
+//
+//
+//
+
+
+
+//
+// var gulp       = require("gulp")
+//   , sass       = require("gulp-sass")
+//   , autoprefix = require("gulp-autoprefixer")
+//   , concat     = require("gulp-concat")
+//   , browserSync = require('browser-sync').create()
+//
+//   , jsmin      = require("gulp-jsmin")
+//   , cssmin     = require("gulp-cssmin")
+//
+//   , devpath   = "./"
+//   , buildpath = "./build/"
+//   , paths = {
+//       dev: {
+//           js:        devpath + "assets/js/"
+//         , css:       devpath + "assets/css/"
+//         , img:       devpath + "assets/img/**/*"
+//         , jsfiles:   devpath + "assets/js/partials/**/*.js"
+//         , js2files:   devpath + "assets/js/lib/**/*.js"
+//         , cssfiles:  devpath + "assets/css/*.css"
+//         , scssfiles: devpath + "assets/scss/**/*.scss"
+//         , phpfiles: devpath + "./**/*.php"
+//         , htmlfiles: devpath + "./*.html"
+//       }
+//       , build: {
+//           js:  buildpath + "assets/js/"
+//         , css: buildpath + "assets/css/"
+//         , img: buildpath + "assets/img/"
+//       }
+//   }
+//   ;
+//
+// gulp.task('browser-sync', function() {
+//     browserSync.init({
+//       proxy: {
+//               host: "localhost",
+//               port: 8890
+//             }
+//     });
+// });
+//
+// gulp.task("styles", function() {
+//   gulp.src(paths.dev.scssfiles)
+//       .pipe(sass({ style: "expanded" }))
+//       .pipe(autoprefix("last 2 versions", "> 1%", "Explorer 7", "Android 2"))
+//       .pipe(cssmin())
+//       .pipe(gulp.dest(paths.dev.css))
+//       .pipe(browserSync.stream());
+// });
+//
+// gulp.task("scripts", function(){
+//   gulp.src(paths.dev.jsfiles)
+//       .pipe(concat("main.js"))
+//       .pipe(gulp.dest(paths.dev.js)).pipe(browserSync.stream());
+//
+//   gulp.src(paths.dev.js2files)
+//       .pipe(concat("jupload.js"))
+//       .pipe(gulp.dest(paths.dev.js))
+//       .pipe(browserSync.stream());
+// });
+//
+// gulp.task("cssmin", function(){
+//   gulp.src(paths.dev.cssfiles)
+//       .pipe(cssmin())
+//       .pipe(gulp.dest(paths.build.css));
+// });
+//
+// gulp.task("jsmin", function(){
+//   gulp.src(paths.dev.js + "bundle.js")
+//       .pipe(jsmin())
+//       .pipe(gulp.dest(paths.build.js));
+// });
+//
+// gulp.task("dev-php", function () {
+//   gulp.src(paths.dev.phpfiles)
+//       .pipe(browserSync.stream());
+// });
+//
+// gulp.task("dev-html", function () {
+//   gulp.src(paths.dev.htmlfiles)
+//      .pipe(browserSync.stream());
+// });
+//
+// gulp.task("watch", function () {
+//   gulp.watch(paths.dev.scssfiles, ["styles"]);
+//   gulp.watch(paths.dev.jsfiles,   ["scripts"]);
+//   gulp.watch(paths.dev.htmlfiles, ["dev-html"]);
+//   gulp.watch(paths.dev.phpfiles,   ["dev-php"]);
+// });
+//
+// // tasks
+// gulp.task("default", ["styles", "scripts", 'browser-sync', "watch"]);
+// //

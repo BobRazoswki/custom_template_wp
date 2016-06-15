@@ -9,6 +9,8 @@
 <html <?php language_attributes(); ?>>
 <!--<![endif]-->
 <head >
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" media="screen" title="no title" charset="utf-8">
 	<meta name="viewport" content="width=device-width">
 	<title><?php wp_title( '|', true, 'right' ); ?></title>
 	<link rel="profile" href="http://gmpg.org/xfn/11">
@@ -18,5 +20,8 @@
 	<![endif]-->
 	<?php wp_head(); ?>
 </head>
-
-<h1>Hello World</h1>
+<body>
+	<div id="preloader">
+		<div id="status">&nbsp;</div>
+	</div>
+	<h1>Hello World</h1>
