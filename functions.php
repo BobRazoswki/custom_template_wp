@@ -42,8 +42,12 @@ add_theme_support( 'post-thumbnails' );
 
 // Link et Script du Head
 function wpc_styles() {
-	wp_register_script( 'js', get_template_directory_uri().'/build/assets/js/main.min.js' );
-	wp_register_style( 'css', get_template_directory_uri().'/build/assets/css/main.min.css' );
+	// PROD
+	// wp_register_script( 'js', get_template_directory_uri().'/build/assets/js/main.min.js' );
+	// wp_register_style( 'css', get_template_directory_uri().'/build/assets/css/main.min.css' );
+	// LOCAL
+	wp_register_script( 'js', get_template_directory_uri().'/assets/js/main.js' );
+	wp_register_style( 'css', get_template_directory_uri().'/assets/css/style.css' );
 	wp_enqueue_script( 'js' );
 	wp_enqueue_style( 'css' );
 }
@@ -78,5 +82,13 @@ function remove_footer_admin () {
 }
 add_filter('admin_footer_text', 'remove_footer_admin');
 
+// WP Alchemy
+// Metaboxes
+include_once WP_CONTENT_DIR . '/wpalchemy/MetaBox.php';
+include_once WP_CONTENT_DIR . '/wpalchemy/MediaAccess.php';
+include_once 'metaboxes/setup.php';
+include_once 'metaboxes/EXEMPLE-spec.php';
+
+$wpalchemy_media_access = new WPAlchemy_MediaAccess();
 
 ?>
