@@ -151,7 +151,7 @@ add_filter('admin_footer_text', 'remove_footer_admin');
 include_once WP_CONTENT_DIR . '/wpalchemy/MetaBox.php';
 include_once WP_CONTENT_DIR . '/wpalchemy/MediaAccess.php';
 include_once 'metaboxes/setup.php';
-include_once 'metaboxes/EXEMPLE-spec.php';
+include_once 'metaboxes/full-spec.php';
 
 $wpalchemy_media_access = new WPAlchemy_MediaAccess();
 
