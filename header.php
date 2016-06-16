@@ -15,6 +15,7 @@
 	<title><?php wp_title( '|', true, 'right' ); ?></title>
 	<link rel="profile" href="http://gmpg.org/xfn/11">
 	<link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
 	<!--[if lt IE 9]>
 		<script src="<?php echo get_template_directory_uri(); ?>/assets/js/html5.min.js"></script>
 	<![endif]-->
@@ -26,3 +27,26 @@
 	</div>
 	<h1>Hello World</h1>
 	<h4>Let's start</h4>
+	<div class="burger">
+		<div class="burger__button-container">
+			<div class="burger__button" onclick="openBurger()">
+		    <span class="icon-bar"></span>
+		    <span class="icon-bar"></span>
+		    <span class="icon-bar"></span>
+		  </div>
+		</div>
+	</div>
+	<?php
+		wp_nav_menu( array(
+			'menu' => 'nav',
+			'container' =>false,
+			'menu_class' => 'nav',
+			'echo' => true,
+			'before' => '',
+			'after' => '',
+			'link_before' => '',
+			'link_after' => '',
+			'depth' => 0,
+			'walker' => new Custom_Menu())
+		);
+	?>

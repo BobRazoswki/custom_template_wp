@@ -1,0 +1,23 @@
+@media (max-width: 992px) {
+  // MENU
+  .menu__item {
+    display: block;
+  }
+  .nav {
+    text-align: center;
+    background: $white;
+    position: absolute;
+    top: 0; left: 0;
+    width: 300px;
+    transform: translateX(-100%);
+    height: 100vh;
+    @include transition(1s all ease);
+  }
+  // BURGER
+  .burger {
+    display: block;
+    &__cross {
+      display: block;
+    }
+  }
+}

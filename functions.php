@@ -1,4 +1,68 @@
 <?php
+// Custom Menu Walker
+class Custom_Menu extends Walker_Nav_Menu {
+	function start_lvl( &$output, $depth ) {
+	    // depth dependent classes
+	    $indent = ( $depth > 0  ? str_repeat( "\t", $depth ) : '' ); // code indent
+	    $display_depth = ( $depth + 1); // because it counts the first submenu as 0
+	    $classes = array( 'menu__sub' );
+	    $class_names = implode( ' ', $classes );
+
+	    // build html
+	    $output .= "\n" . $indent . '<ul class="' . $class_names . '">' . "\n";
+	}
+	function display_element( $element, &$children_elements, $max_depth, $depth=0, $args, &$output )
+    {
+        $id_field = $this->db_fields['id'];
+        if ( is_object( $args[0] ) ) {
+            $args[0]->has_children = ! empty( $children_elements[$element->$id_field] );
+        }
+        return parent::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
+    }
+	function start_el( &$output, $item, $depth, $args ) {
+        global $wp_query;
+        $indent = ( $depth > 0 ? str_repeat( "\t", $depth ) : '' ); // code indent
+
+        // depth dependent classes
+        $classes = empty( $item->classes ) ? array() : (array) $item->classes;
+
+        $isCurrent = ( in_array( 'current-menu-item', $classes ) || in_array( 'current-menu-parent', $classes ) || in_array( 'current_page_ancestor', $classes ) );
+
+        $depth_classes = array(
+            ( $depth == 0 ? 'menu__item' : 'menu__sub__item' ),
+            ( $args->has_children ? 'menu__item--parent' : '' ),
+        );
+
+        if ( $isCurrent ) $depth_classes[] = $depth == 0 ? 'menu__item--current' : 'menu__sub__item--current';
+
+        $depth_class_names = esc_attr( implode( ' ', $depth_classes ) );
+
+        // passed classes
+        $class_names = esc_attr( implode( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item ) ) );
+
+        // build html
+        $output .= $indent . '<li class="' . $depth_class_names . '">';
+
+        // link attributes
+        $attributes  = ! empty( $item->attr_title ) ? ' title="'  . esc_attr( $item->attr_title ) .'"' : '';
+        $attributes .= ! empty( $item->target )     ? ' target="' . esc_attr( $item->target     ) .'"' : '';
+        $attributes .= ! empty( $item->xfn )        ? ' rel="'    . esc_attr( $item->xfn        ) .'"' : '';
+        $attributes .= ! empty( $item->url )        ? ' href="'   . esc_attr( $item->url        ) .'"' : '';
+        $attributes .= ' class="link ' . ( $depth > 0 ? 'menu__sub__link' : 'menu__link' ) . ($item->classes[0] === 'icon' ? ' ' . $item->classes[0] . ' ' . $item->classes[1] : '') . ($item->classes[0] === 'logo' ? ' ' . $item->classes[0] : '') . '"';
+        $item_output = sprintf( '%1$s<a%2$s>%3$s%4$s%5$s</a>%6$s',
+            $args->before,
+            $attributes,
+            $args->link_before,
+            apply_filters( 'the_title', $item->title, $item->ID ),
+            $args->link_after,
+            $args->after
+        );
+        $output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
+    }
+    function end_el(&$output, $item, $depth=0, $args=array()) {
+        $output .= "</a></li>\n";
+    }
+}
 
 // Add menu to WP Dashboard
 add_action( 'admin_menu', 'register_my_custom_menu_page' );

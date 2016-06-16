@@ -29,6 +29,10 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
+html {
+  margin-top: 0px;
+}
+
 body {
 	line-height: 1;
 	font-size: 16px;
@@ -66,4 +70,15 @@ img {
 	max-width: 100%;
 	height: auto;
 }
+
+
+@import 'variables';
+@import 'mixins';
 @import 'partials/test';
+@import 'partials/menu';
+@import 'partials/burger';
+// Tjs en dessous
+@import 'partials/media992';
+@import 'partials/media768';
+// Le dernier
+@import 'partials/behaviours';

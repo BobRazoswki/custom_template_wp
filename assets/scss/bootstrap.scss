@@ -1,0 +1,38 @@
+@import "variables";
+@import "mixins";
+
+.row {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.container {
+  width: 80%;
+  margin: 0 auto;
+  overflow: hidden;
+  max-width: 1026px;
+}
+
+@media (min-width: 1200px) {
+  .large{
+    @include grid-columns();
+  }
+}
+
+@media (min-width: 970px) and (max-width: 1200px) {
+  .medium{
+    @include grid-columns();
+  }
+}
+
+@media (min-width: 768px) and (max-width: 970px) {
+  .small{
+    @include grid-columns();
+  }
+}
+
+@media (max-width: 768px) {
+  .extrasmall{
+    @include grid-columns();
+  }
+}

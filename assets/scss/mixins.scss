@@ -1,0 +1,72 @@
+@mixin font($font, $size, $upper) {
+  font-family:$font;
+  font-size: $size;
+  text-transform: $upper;
+}
+
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+     -moz-border-radius: $radius;
+      -ms-border-radius: $radius;
+       -o-border-radius: $radius;
+          border-radius: $radius;
+}
+
+@mixin transition($transition) {
+  -webkit-transition: $transition;
+     -moz-transition: $transition;
+      -ms-transition: $transition;
+       -o-transition: $transition;
+          transition: $transition;
+}
+
+@mixin box-shadow($box-shadow) {
+  -webkit-box-shadow: $box-shadow;
+     -moz-box-shadow: $box-shadow;
+      -ms-transition: $box-shadow;
+       -o-box-shadow: $box-shadow;
+          box-shadow: $box-shadow;
+}
+
+@mixin transform($transform) {
+  -webkit-transform: $transform;
+     -moz-transform: $transform;
+      -ms-transform: $transform;
+       -o-transform: $transform;
+          transform: $transform;
+}
+
+@mixin align-items($align-items) {
+  -webkit-align-items: $align-items;
+     -moz-align-items: $align-items;
+      -ms-align-items: $align-items;
+          align-items: $align-items;
+}
+
+@mixin justify-content($justify-content) {
+  -webkit-justify-content: $justify-content;
+     -moz-justify-content: $justify-content;
+      -ms-justify-content: $justify-content;
+          justify-content: $justify-content;
+}
+
+@mixin flexCrossBrowser {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+
+@mixin grid-columns() {
+  $grid: 12;
+  $i: 0;
+  @for $i from (0 + 1) through $grid {
+    &--#{$i} {
+      width: percentage($i / $grid);
+      float: left;
+      position: relative;
+      height: 100%;
+    }
+  }
+}
