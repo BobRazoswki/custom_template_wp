@@ -1,0 +1,35 @@
+.dashboard__h1 {
+  text-align: center;
+}
+
+.dashboard__header {
+    background: white;
+    padding: 20px;
+    border-radius: 4px;
+    margin-right: 20px;
+}
+
+.dashboard__logo {
+    width: 100%;
+    display: block;
+    position: relative;
+}
+
+.dashboard__logo--img {
+    width: 200px;
+    vertical-align: middle;
+    margin-left: 20px;
+}
+
+.dashboard__logo--submit.button.button-primary.button-large, .dashboard__logo--uploader.button {
+    margin-left: 20px;
+    display: inline-block;
+    position: relative;
+    clear: both;
+    vertical-align: baseline;
+}
+
+.dashboard__logo label {
+    width: 90px;
+    display: inline-block;
+}

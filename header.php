@@ -25,28 +25,33 @@
 	<div id="preloader">
 		<div id="status">&nbsp;</div>
 	</div>
-	<h1>Hello World</h1>
-	<h4>Let's start</h4>
-	<div class="burger">
-		<div class="burger__button-container">
-			<div class="burger__button" onclick="openBurger()">
-		    <span class="icon-bar"></span>
-		    <span class="icon-bar"></span>
-		    <span class="icon-bar"></span>
-		  </div>
+	<header class="header">
+		<div class="container">
+			<?php $logo_url = get_option('logo_url'); ?>
+			<img src="<?php echo $logo_url ?>" alt="logo coding days" class="header__logo" />
+			<div class="burger">
+				<div class="burger__button-container">
+					<div class="burger__button" onclick="openBurger()">
+				    <span class="icon-bar"></span>
+				    <span class="icon-bar"></span>
+				    <span class="icon-bar"></span>
+				  </div>
+				</div>
+			</div>
+
+			<?php
+				wp_nav_menu( array(
+					'menu' => 'nav',
+					'container' =>false,
+					'menu_class' => 'nav',
+					'echo' => true,
+					'before' => '',
+					'after' => '',
+					'link_before' => '',
+					'link_after' => '',
+					'depth' => 0,
+					'walker' => new Custom_Menu())
+				);
+			?>
 		</div>
-	</div>
-	<?php
-		wp_nav_menu( array(
-			'menu' => 'nav',
-			'container' =>false,
-			'menu_class' => 'nav',
-			'echo' => true,
-			'before' => '',
-			'after' => '',
-			'link_before' => '',
-			'link_after' => '',
-			'depth' => 0,
-			'walker' => new Custom_Menu())
-		);
-	?>
+	</header>
